@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment files (contain secrets) — keep only the .example templates
+.env
+*.env
+!*.env.example
+!.env.example
+
+# Logs & local runtime output
+*.log
+npm-debug.log*
+yarn-error.log*
+_*.out
+_*.err
+
+# Local setup / scratch helpers created during local run
+backend/_dbinfo.js
+backend/_dbdashboard.js
+token/_genkey.js
+token/_airdrop.js
+
+# Build output
+build/
+dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
