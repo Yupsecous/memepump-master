@@ -1,16 +1,28 @@
 
-import Arweave from "arweave";
 import { key } from "./key";
 
-const arweave = Arweave.init({
-    host: "arweave.net",
-    port: 443,
-    protocol: "https",
-    timeout: 20000,
-    logging: false,
-});
+// Lazy-load arweave so its WebCryptoDriver (which requires window.crypto.subtle,
+// available only in a secure context: HTTPS or localhost) is NOT evaluated at app
+// startup. Over plain HTTP on a public IP, importing arweave at module load throws
+// "SubtleCrypto not available!" and crashes the whole app. With this, the app boots
+// over HTTP and only the upload helpers below fail (gracefully) on insecure origins.
+let _arweave = null;
+const getArweave = async () => {
+    if (_arweave) return _arweave;
+    const mod = await import("arweave");
+    const Arweave = mod.default || mod;
+    _arweave = Arweave.init({
+        host: "arweave.net",
+        port: 443,
+        protocol: "https",
+        timeout: 20000,
+        logging: false,
+    });
+    return _arweave;
+};
 
 export const uploadFile = async ( file) => {
+    const arweave = await getArweave();
 
     const fileType = file.type || "application/octet-stream"; // Default type if not available
     let transaction;
@@ -50,6 +62,7 @@ export const uploadFile = async ( file) => {
 }
 
 export const uploadMetadata = async (_metadata) => {
+    const arweave = await getArweave();
     // Upload metadata to Arweave
     const metadata = {
         name: _metadata.name,
