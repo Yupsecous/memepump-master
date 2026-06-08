@@ -18,7 +18,7 @@ import { WalletConnectWalletAdapter } from "@solana/wallet-adapter-walletconnect
 // import { WalletModal } from "@solana/wallet-adapter-react-ui";
 
 function SolanaWalletProvider({ children }) {
-    const endpoint = process.env.REACT_APP_DEVNET_MODE === "true" ? clusterApiUrl("devnet") : process.env.REACT_APP_RPC_URL;
+    const endpoint = process.env.REACT_APP_DEVNET_MODE === "true" ? clusterApiUrl("devnet") : (process.env.REACT_APP_RPC_URL || clusterApiUrl("devnet"));
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
