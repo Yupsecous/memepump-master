@@ -30,7 +30,9 @@ import LoadingDialog from "./components/Dialogs/LoadingDialog";
 import { getTokenListByOwner } from "./utils/solana";
 import { isValidAddress } from "./utils/methods";
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+// Falls back to the backend tunnel when REACT_APP_SERVER_URL is not set in the build
+// (e.g. on Vercel before the env var is configured). The env var, when present, wins.
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "https://appropriations-slim-loose-replication.trycloudflare.com";
 
 export const AppContext = createContext(null);
 
